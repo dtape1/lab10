@@ -1,0 +1,90 @@
+classDiagram
+
+class Client {
+    +int Id
+    +string Name
+    +string Phone
+}
+
+class GamingPlace {
+    +int Id
+    +string Type
+    +string Status
+}
+
+class Booking {
+    +int Id
+    +DateTime StartTime
+    +int Duration
+    +create()
+    +cancel()
+}
+
+class Session {
+    +int Id
+    +DateTime StartTime
+    +DateTime EndTime
+    +double TotalPrice
+    +startSession()
+    +endSession()
+}
+
+class Payment {
+    +int Id
+    +double Amount
+    +DateTime Date
+    +processPayment()
+}
+
+class Administrator {
+    +createBooking()
+    +startSession()
+    +endSession()
+    +viewStatus()
+}
+
+%% Singleton
+class SessionManager {
+    -static instance
+    -SessionManager()
+    +getInstance()
+    +startSession()
+    +endSession()
+}
+
+SessionManager --> Session
+
+%% Strategy
+class PricingStrategy {
+    <<interface>>
+    +calculatePrice(duration)
+}
+
+class StandardPricing
+class ProPricing
+class BootcampPricing
+class ConsolePricing
+
+PricingStrategy <|.. StandardPricing
+PricingStrategy <|.. ProPricing
+PricingStrategy <|.. BootcampPricing
+PricingStrategy <|.. ConsolePricing
+
+Session --> PricingStrategy
+
+%% Factory
+class GamingPlaceFactory {
+    +createGamingPlace(type)
+}
+
+GamingPlaceFactory --> GamingPlace
+
+%% Relationships
+Client "1" --> "0..*" Booking
+GamingPlace "1" --> "0..*" Booking
+Booking "1" --> "1" Session
+Session "1" --> "1" Payment
+
+Administrator --> Booking
+Administrator --> Session
+Administrator --> GamingPlace
